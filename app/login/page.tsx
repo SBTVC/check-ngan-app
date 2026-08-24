@@ -5,8 +5,8 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <SignIn
         routing="hash"
-        forceRedirectUrl="/"
-        signUpForceRedirectUrl="/"
+        forceRedirectUrl="/auth/continue"
+        signUpForceRedirectUrl="/auth/continue"
       />
     </main>
   )
