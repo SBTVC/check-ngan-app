@@ -17,10 +17,15 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
 
   useEffect(() => {
     const current = getInitialTheme()
-    setTheme(current)
     document.documentElement.classList.toggle('dark', current === 'dark')
     document.documentElement.dataset.theme = current
-    setMounted(true)
+
+    const timeoutId = window.setTimeout(() => {
+      setTheme(current)
+      setMounted(true)
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [])
 
   function toggleTheme() {
