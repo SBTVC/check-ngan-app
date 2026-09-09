@@ -1,5 +1,6 @@
 import { SignIn } from '@clerk/nextjs'
 import Image from 'next/image'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function LoginPage() {
   return (
@@ -32,8 +33,12 @@ export default function LoginPage() {
           </div>
         </section>
 
-        <section className="flex items-center justify-center bg-[#f7f8fb] p-4 sm:p-8">
-          <div className="w-full max-w-md">
+        <section className="relative flex items-center justify-center bg-[#f7f8fb] p-4 sm:p-8">
+          <div className="absolute right-4 top-4 sm:right-8 sm:top-6">
+            <ThemeToggle />
+          </div>
+
+          <div className="w-full max-w-md pt-16 sm:pt-10">
             <div className="mb-6 flex items-center gap-3 lg:hidden">
               <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-orange-100 bg-white">
                 <Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="48px" className="object-cover" />
