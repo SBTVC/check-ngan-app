@@ -2,6 +2,7 @@ import { UserButton } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default async function SetupRolePage() {
   const { userId, sessionClaims } = await auth()
@@ -12,7 +13,11 @@ export default async function SetupRolePage() {
   if (role === 'student') redirect('/student')
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f7f8fb] p-5 text-slate-950">
+    <main className="relative flex min-h-screen items-center justify-center bg-[#f7f8fb] p-5 text-slate-950">
+      <div className="absolute right-5 top-5">
+        <ThemeToggle />
+      </div>
+
       <section className="w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">

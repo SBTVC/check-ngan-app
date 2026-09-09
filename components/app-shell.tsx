@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export type AppRole = 'teacher' | 'student'
 
@@ -27,8 +28,8 @@ export function AppShell({ role, children }: { role: AppRole; children: ReactNod
   const root = role === 'teacher' ? '/teacher' : '/student'
 
   return (
-    <div className="min-h-screen bg-[#f7f8fb] text-slate-950">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white xl:flex xl:flex-col">
+    <div className="app-shell min-h-screen bg-[#f7f8fb] text-slate-950">
+      <aside className="app-sidebar fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white xl:flex xl:flex-col">
         <div className="border-b border-slate-100 px-6 py-6">
           <Link href={root} className="flex items-center gap-3">
             <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-orange-100 bg-orange-50">
@@ -56,7 +57,8 @@ export function AppShell({ role, children }: { role: AppRole; children: ReactNod
           </nav>
         </div>
 
-        <div className="mt-auto border-t border-slate-100 p-5">
+        <div className="mt-auto space-y-3 border-t border-slate-100 p-5">
+          <ThemeToggle />
           <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-amber-400 p-4 text-white shadow-sm">
             <p className="text-xs font-semibold text-orange-50">สถานะระบบ</p>
             <p className="mt-1 text-sm font-extrabold">พร้อมใช้งาน</p>
@@ -66,13 +68,13 @@ export function AppShell({ role, children }: { role: AppRole; children: ReactNod
       </aside>
 
       <div className="xl:pl-72">
-        <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+        <header className="app-header sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
           <div className="flex min-h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <Link href={root} className="relative h-10 w-10 overflow-hidden rounded-xl border border-orange-100 xl:hidden"><Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="40px" className="object-cover" /></Link>
               <div><p className="text-sm font-extrabold">{role === 'teacher' ? 'ระบบสำหรับคุณครู' : 'ระบบสำหรับนักเรียน'}</p><p className="hidden text-xs text-slate-500 sm:block">ระบบติดตามงาน มอบหมายงาน และการให้คะแนน</p></div>
             </div>
-            <div className="flex items-center gap-3"><span className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 sm:inline-flex">● ออนไลน์</span><UserButton /></div>
+            <div className="flex items-center gap-2 sm:gap-3"><ThemeToggle compact /><span className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 sm:inline-flex">● ออนไลน์</span><UserButton /></div>
           </div>
           <nav className="flex gap-2 overflow-x-auto border-t border-slate-100 px-4 py-2 xl:hidden">
             {nav.map((item, index) => {
