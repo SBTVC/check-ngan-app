@@ -5,57 +5,33 @@ import { ThemeToggle } from '@/components/theme-toggle'
 export default function LoginPage() {
   return (
     <main className="min-h-screen bg-slate-950">
-      <div className="grid min-h-screen lg:grid-cols-[1.1fr_.9fr]">
+      <div className="grid min-h-screen lg:grid-cols-[1.05fr_.95fr]">
         <section className="relative hidden overflow-hidden lg:block">
-          <Image src="/college-campus.svg" alt="วิทยาลัย" fill sizes="55vw" className="object-cover opacity-75" priority />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-950/65 to-orange-900/35" />
+          <Image src="/college-campus.svg" alt="บรรยากาศวิทยาลัย" fill sizes="52vw" className="object-cover opacity-80" priority />
+          <div className="absolute inset-0 bg-slate-950/70" />
+          <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-slate-950 to-transparent" />
           <div className="relative flex h-full flex-col justify-between p-10 xl:p-14">
             <div className="flex items-center gap-3">
-              <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-white/20 bg-white">
-                <Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="56px" className="object-cover" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-300">Check Ngan</p>
-                <p className="mt-1 font-extrabold text-white">ระบบจัดการงานการเรียน</p>
-              </div>
+              <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-white/20 bg-white"><Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="48px" className="object-cover" /></div>
+              <div><p className="text-[11px] font-black uppercase tracking-[0.18em] text-orange-300">Check Ngan</p><p className="mt-1 text-sm font-black text-white">ระบบจัดการงานการเรียน</p></div>
             </div>
 
-            <div className="max-w-2xl pb-8">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-orange-300">Learning workflow</p>
-              <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-white xl:text-5xl">
-                มอบหมาย ส่ง ตรวจ และให้คะแนน
-                <span className="block text-orange-300">ครบในระบบเดียว</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-base leading-8 text-slate-200">
-                ระบบสำหรับคุณครูและนักเรียน ช่วยจัดการงานในชั้นเรียน ติดตามการส่งไฟล์ และดูผลคะแนนได้อย่างเป็นระบบ
-              </p>
+            <div className="max-w-xl pb-5">
+              <p className="text-xs font-bold text-orange-300">ระบบสำหรับการเรียนการสอน</p>
+              <h1 className="mt-3 text-4xl font-black leading-tight tracking-tight text-white xl:text-5xl">จัดการงานในชั้นเรียน<br />อย่างเป็นระบบ</h1>
+              <p className="mt-4 max-w-lg text-sm leading-7 text-slate-200 xl:text-base">คุณครูสามารถมอบหมายและตรวจงาน นักเรียนสามารถติดตาม ส่งงาน และดูผลคะแนนได้จากพื้นที่เดียว</p>
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-slate-300"><span>มอบหมายงาน</span><span>ส่งไฟล์</span><span>ตรวจและให้คะแนน</span><span>ติดตามสถานะ</span></div>
             </div>
           </div>
         </section>
 
-        <section className="relative flex items-center justify-center bg-[#f7f8fb] p-4 sm:p-8">
-          <div className="absolute right-4 top-4 sm:right-8 sm:top-6">
-            <ThemeToggle />
-          </div>
-
-          <div className="w-full max-w-md pt-16 sm:pt-10">
-            <div className="mb-6 flex items-center gap-3 lg:hidden">
-              <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-orange-100 bg-white">
-                <Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="48px" className="object-cover" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-orange-600">Check Ngan</p>
-                <p className="text-sm font-extrabold text-slate-950">ระบบจัดการงานการเรียน</p>
-              </div>
-            </div>
-
-            <div className="mb-5">
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-orange-600">Welcome back</p>
-              <h2 className="mt-2 text-3xl font-extrabold text-slate-950">เข้าสู่ระบบ</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-500">ใช้บัญชีที่ได้รับสิทธิ์จากระบบเพื่อเข้าสู่หน้าคุณครูหรือนักเรียน</p>
-            </div>
-
-            <SignIn routing="hash" forceRedirectUrl="/auth/continue" signUpForceRedirectUrl="/auth/continue" />
+        <section className="relative flex items-center justify-center bg-[#f6f7f9] p-4 sm:p-8">
+          <div className="absolute right-4 top-4 sm:right-8 sm:top-6"><ThemeToggle /></div>
+          <div className="w-full max-w-md pt-16 sm:pt-8">
+            <div className="mb-8 flex items-center gap-3 lg:hidden"><div className="relative h-11 w-11 overflow-hidden rounded-xl border border-orange-100 bg-white"><Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="44px" className="object-cover" /></div><div><p className="text-[11px] font-black uppercase tracking-[0.16em] text-orange-600">Check Ngan</p><p className="text-sm font-black text-slate-950">ระบบจัดการงานการเรียน</p></div></div>
+            <div className="mb-5"><p className="text-xs font-bold text-orange-600">เข้าสู่ระบบ</p><h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950">ยินดีต้อนรับกลับมา</h2><p className="mt-2 text-sm leading-6 text-slate-500">เข้าสู่ระบบด้วยบัญชีที่ได้รับสิทธิ์ เพื่อไปยังพื้นที่ของคุณครูหรือนักเรียน</p></div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-sm"><SignIn routing="hash" forceRedirectUrl="/auth/continue" signUpForceRedirectUrl="/auth/continue" /></div>
+            <p className="mt-5 text-center text-xs leading-5 text-slate-400">หากบัญชียังไม่มีบทบาท ระบบจะพาไปหน้าตั้งค่าสิทธิ์โดยอัตโนมัติ</p>
           </div>
         </section>
       </div>
