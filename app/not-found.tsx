@@ -1,0 +1,3 @@
+import Link from 'next/link'
+
+export default function NotFound(){return <main className="flex min-h-screen items-center justify-center bg-[#f6f7f9] p-6"><section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm"><p className="text-xs font-black uppercase tracking-[.18em] text-orange-600">404</p><h1 className="mt-3 text-2xl font-black text-slate-950">ไม่พบหน้าที่ต้องการ</h1><p className="mt-2 text-sm leading-6 text-slate-500">ลิงก์อาจไม่ถูกต้อง หรือข้อมูลนี้อาจถูกลบออกจากระบบแล้ว</p><Link href="/" className="mt-6 inline-flex rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-black text-white">กลับหน้าหลัก</Link></section></main>}
