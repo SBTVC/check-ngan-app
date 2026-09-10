@@ -18,8 +18,8 @@ export default async function SetupRolePage() {
       <section className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="relative h-11 w-11 overflow-hidden rounded-xl border border-orange-100 bg-orange-50"><Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="44px" className="object-cover" /></div>
-            <div><p className="text-[11px] font-black uppercase tracking-[0.16em] text-orange-600">Check Ngan</p><p className="mt-0.5 text-sm font-black text-slate-950">การตั้งค่าบัญชีผู้ใช้งาน</p></div>
+            <div className="relative h-11 w-11 overflow-hidden rounded-xl border border-orange-100 bg-orange-50"><Image src="/check-ngan-logo.svg" alt="check-ngan System" fill sizes="44px" className="object-cover" /></div>
+            <div><p className="text-[11px] font-black uppercase tracking-[0.16em] text-orange-600">check-ngan System</p><p className="mt-0.5 text-sm font-black text-slate-950">ระบบติดตามงานของนักเรียนและนักศึกษา</p></div>
           </div>
           <UserButton />
         </div>
@@ -27,7 +27,7 @@ export default async function SetupRolePage() {
         <div className="p-5 sm:p-7">
           <div className="flex h-11 w-11 items-center justify-center rounded-full border border-orange-200 bg-orange-50 text-lg font-black text-orange-700">!</div>
           <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-950">บัญชียังไม่ได้กำหนดบทบาท</h1>
-          <p className="mt-2 max-w-xl text-sm leading-7 text-slate-500">ระบบตรวจพบบัญชีแล้ว แต่ยังไม่มีสิทธิ์เป็นคุณครูหรือนักเรียน จึงยังไม่สามารถเปิดพื้นที่ใช้งานหลักได้</p>
+          <p className="mt-2 max-w-xl text-sm leading-7 text-slate-500">ระบบตรวจพบบัญชีแล้ว แต่ยังไม่มีสิทธิ์เป็นอาจารย์หรือนักเรียน/นักศึกษา จึงยังไม่สามารถเปิดพื้นที่ใช้งานหลักได้</p>
 
           <div className="mt-6 rounded-xl border border-orange-200 bg-orange-50 p-5">
             <h2 className="text-sm font-black text-slate-900">สิ่งที่ต้องดำเนินการ</h2>
