@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { EmptyState, PageHeader, PrimaryLink, StatCard, StatusBadge } from '@/components/ui'
+import { UserProfileSummary } from '@/components/user-profile-summary'
 import { formatDateTime } from '@/lib/format'
 import { useSupabase } from '@/lib/supabase/useSupabase'
 
@@ -52,14 +53,13 @@ export default function TeacherDashboardPage() {
   const waiting = useMemo(() => submissions.filter((item) => !gradedIds.has(item.id)), [submissions, gradedIds])
   const waitingCount = waiting.length
   const teacherName = user?.fullName || user?.firstName || 'คุณครู'
-  const initials = teacherName.slice(0, 1)
 
   return (
     <div className="space-y-7">
       <PageHeader
-        eyebrow="ภาพรวมวันนี้"
+        eyebrow="แดชบอร์ดอาจารย์"
         title={`สวัสดี ${teacherName}`}
-        description="ดูงานที่ต้องจัดการ ติดตามการส่ง และเข้าถึงงานสำคัญของวันนี้ได้จากหน้านี้"
+        description="ภาพรวมการติดตามงานของนักเรียนและนักศึกษา พร้อมรายการที่ต้องตรวจและงานล่าสุด"
         actions={
           <>
             <button type="button" onClick={() => void loadDashboard()} disabled={loading} className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60">
@@ -71,23 +71,7 @@ export default function TeacherDashboardPage() {
       />
 
       <section className="grid gap-5 xl:grid-cols-[1.55fr_.45fr]">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-orange-700">{initials}</div>
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-400">บัญชีผู้ใช้งาน</p>
-                <h2 className="mt-1 truncate text-lg font-black text-slate-950">{teacherName}</h2>
-                <p className="mt-0.5 text-sm text-slate-500">อาจารย์ผู้สอน · Check Ngan</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Link href="/teacher/assignments" className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50">ดูงานทั้งหมด</Link>
-              <Link href="/teacher/submissions" className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800">ไปหน้าตรวจงาน</Link>
-            </div>
-          </div>
-        </div>
-
+        <UserProfileSummary role="teacher" />
         <div className={`rounded-2xl border p-5 shadow-sm ${waitingCount > 0 ? 'border-orange-200 bg-orange-50' : 'border-emerald-200 bg-emerald-50'}`}>
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -103,7 +87,7 @@ export default function TeacherDashboardPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="งานที่มอบหมาย" value={assignments.length} note="งานทั้งหมดที่สร้างไว้" />
-        <StatCard label="งานที่ส่งเข้ามา" value={submissions.length} note="Submission ที่ได้รับทั้งหมด" tone="blue" />
+        <StatCard label="งานที่ส่งเข้ามา" value={submissions.length} note="รายการส่งงานทั้งหมด" tone="blue" />
         <StatCard label="รอตรวจ" value={waitingCount} note="ยังไม่มีผลคะแนน" tone="orange" />
         <StatCard label="ตรวจแล้ว" value={grades.length} note="มีผลคะแนนในระบบ" tone="green" />
       </section>
@@ -111,12 +95,12 @@ export default function TeacherDashboardPage() {
       <section className="grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 sm:px-6">
-            <div><h2 className="text-lg font-black text-slate-950">งานล่าสุด</h2><p className="mt-1 text-sm text-slate-500">งานที่คุณสร้างล่าสุด เรียงตามวันที่สร้าง</p></div>
+            <div><h2 className="text-lg font-black text-slate-950">งานล่าสุด</h2><p className="mt-1 text-sm text-slate-500">งานที่สร้างล่าสุด เรียงตามวันที่สร้าง</p></div>
             <Link href="/teacher/assignments" className="text-sm font-black text-orange-700 hover:underline">ดูทั้งหมด</Link>
           </div>
           <div className="p-5 sm:p-6">
             {assignments.length === 0 ? (
-              <EmptyState title="ยังไม่มีงานที่มอบหมาย" description="สร้างงานแรกเพื่อเริ่มใช้งานระบบ" action={<PrimaryLink href="/teacher/assignments/new">+ สร้างงานใหม่</PrimaryLink>} />
+              <EmptyState title="ยังไม่มีงานที่มอบหมาย" description="สร้างงานแรกเพื่อเริ่มติดตามงานในระบบ" action={<PrimaryLink href="/teacher/assignments/new">+ สร้างงานใหม่</PrimaryLink>} />
             ) : (
               <div className="divide-y divide-slate-100">
                 {assignments.slice(0, 5).map((assignment) => (
@@ -138,12 +122,12 @@ export default function TeacherDashboardPage() {
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 sm:px-6"><div><h2 className="text-lg font-black text-slate-950">งานที่รอตรวจ</h2><p className="mt-1 text-sm text-slate-500">รายการล่าสุดที่ควรจัดการต่อ</p></div><span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-black text-orange-700">{waitingCount}</span></div>
           <div className="p-5 sm:p-6">
             {waiting.length === 0 ? (
-              <div className="py-6 text-center"><div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-lg font-black text-emerald-700">✓</div><h3 className="mt-3 font-black text-slate-900">ตรวจงานครบแล้ว</h3><p className="mt-1 text-sm text-slate-500">ตอนนี้ไม่มี Submission ที่รอการตรวจ</p></div>
+              <div className="py-6 text-center"><div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-lg font-black text-emerald-700">✓</div><h3 className="mt-3 font-black text-slate-900">ตรวจงานครบแล้ว</h3><p className="mt-1 text-sm text-slate-500">ตอนนี้ไม่มีงานที่รอการตรวจ</p></div>
             ) : (
               <div className="space-y-2">
                 {waiting.slice(0, 5).map((submission) => (
                   <Link key={submission.id} href={`/teacher/submissions/${submission.id}`} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3 transition hover:border-orange-200 hover:bg-orange-50/50">
-                    <div className="min-w-0"><p className="truncate text-sm font-black text-slate-900">{submission.title || `Submission #${submission.id}`}</p><p className="mt-1 text-xs text-slate-500">ส่งเมื่อ {formatDateTime(submission.submitted_at)}</p></div>
+                    <div className="min-w-0"><p className="truncate text-sm font-black text-slate-900">{submission.title || `งานส่ง #${submission.id}`}</p><p className="mt-1 text-xs text-slate-500">ส่งเมื่อ {formatDateTime(submission.submitted_at)}</p></div>
                     <span className="shrink-0 text-sm font-black text-orange-700">ตรวจ →</span>
                   </Link>
                 ))}
