@@ -1,11 +1,12 @@
 'use client'
 
-import { UserButton, useUser } from '@clerk/nextjs'
+import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { UserProfileSummary } from '@/components/user-profile-summary'
 
 export type AppRole = 'teacher' | 'student'
 type NavItem = { href: string; label: string; description: string; icon: string }
@@ -23,28 +24,25 @@ const studentNav: NavItem[] = [
 
 export function AppShell({ role, children }: { role: AppRole; children: ReactNode }) {
   const pathname = usePathname()
-  const { user } = useUser()
   const nav = role === 'teacher' ? teacherNav : studentNav
   const root = role === 'teacher' ? '/teacher' : '/student'
-  const displayName = user?.fullName || user?.firstName || (role === 'teacher' ? 'คุณครู' : 'นักเรียน')
-  const roleLabel = role === 'teacher' ? 'อาจารย์ผู้สอน' : 'นักเรียน'
 
   return (
     <div className="app-shell min-h-screen bg-[#f6f7f9] text-slate-950">
       <aside className="app-sidebar fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white xl:flex xl:flex-col">
-        <div className="px-6 py-6">
+        <div className="border-b border-slate-100 px-6 py-5">
           <Link href={root} className="flex items-center gap-3">
             <div className="relative h-11 w-11 overflow-hidden rounded-xl border border-orange-100 bg-orange-50">
-              <Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="44px" className="object-cover" priority />
+              <Image src="/check-ngan-logo.svg" alt="check-ngan System" fill sizes="44px" className="object-cover" priority />
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-orange-600">Check Ngan</p>
-              <p className="truncate text-sm font-black text-slate-950">ระบบจัดการงานการเรียน</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-orange-600">check-ngan System</p>
+              <p className="mt-0.5 text-sm font-black leading-5 text-slate-950">ระบบติดตามงานของนักเรียนและนักศึกษา</p>
             </div>
           </Link>
         </div>
 
-        <div className="px-4 pt-2">
+        <div className="px-4 pt-5">
           <p className="px-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">เมนูหลัก</p>
           <nav className="mt-3 space-y-1">
             {nav.map((item, index) => {
@@ -60,18 +58,14 @@ export function AppShell({ role, children }: { role: AppRole; children: ReactNod
         </div>
 
         <div className="mt-auto border-t border-slate-100 p-4">
-          <div className="mb-3 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white bg-orange-100">
-              {user?.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.imageUrl} alt={displayName} className="h-full w-full object-cover" />
-              ) : <span className="flex h-full w-full items-center justify-center text-sm font-black text-orange-700">{displayName.slice(0, 1)}</span>}
+          <div className="mb-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="flex items-center justify-between gap-3">
+              <UserProfileSummary role={role} compact />
+              <UserButton />
             </div>
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-black text-slate-900">{displayName}</p><p className="truncate text-xs text-slate-500">{roleLabel}</p></div>
-            <UserButton />
           </div>
           <ThemeToggle />
-          <p className="mt-3 px-1 text-[11px] leading-5 text-slate-400">Check Ngan · ระบบติดตามงานสำหรับการเรียนการสอน</p>
+          <p className="mt-3 px-1 text-[11px] leading-5 text-slate-400">check-ngan System · ระบบติดตามงานของนักเรียนและนักศึกษา</p>
         </div>
       </aside>
 
@@ -79,10 +73,10 @@ export function AppShell({ role, children }: { role: AppRole; children: ReactNod
         <header className="app-header sticky top-0 z-30 border-b border-slate-200/90 bg-white/95 backdrop-blur">
           <div className="flex min-h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
-              <Link href={root} className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-orange-100 xl:hidden"><Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="36px" className="object-cover" /></Link>
-              <div className="min-w-0"><p className="truncate text-sm font-black text-slate-950">{role === 'teacher' ? 'พื้นที่ทำงานสำหรับคุณครู' : 'พื้นที่งานสำหรับนักเรียน'}</p><p className="hidden truncate text-xs text-slate-500 sm:block">{pathname === root ? 'ภาพรวม' : pathname.includes('submissions') ? 'ตรวจงานและการให้คะแนน' : 'งานที่มอบหมาย'}</p></div>
+              <Link href={root} className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-orange-100 xl:hidden"><Image src="/check-ngan-logo.svg" alt="check-ngan System" fill sizes="36px" className="object-cover" /></Link>
+              <div className="min-w-0"><p className="truncate text-sm font-black text-slate-950">{role === 'teacher' ? 'พื้นที่ทำงานสำหรับอาจารย์' : 'พื้นที่ติดตามงานสำหรับนักเรียน/นักศึกษา'}</p><p className="hidden truncate text-xs text-slate-500 sm:block">{pathname === root ? 'ภาพรวม' : pathname.includes('submissions') ? 'ตรวจงานและการให้คะแนน' : 'งานที่มอบหมาย'}</p></div>
             </div>
-            <div className="flex items-center gap-2"><ThemeToggle compact /><span className="hidden h-5 w-px bg-slate-200 sm:block"/><div className="hidden text-right sm:block"><p className="max-w-40 truncate text-xs font-bold text-slate-800">{displayName}</p><p className="text-[11px] text-slate-400">{roleLabel}</p></div><UserButton /></div>
+            <div className="flex items-center gap-2"><ThemeToggle compact /><span className="hidden h-5 w-px bg-slate-200 sm:block"/><div className="hidden sm:block"><UserProfileSummary role={role} compact /></div><UserButton /></div>
           </div>
           <nav className="flex gap-2 overflow-x-auto border-t border-slate-100 px-4 py-2 xl:hidden">
             {nav.map((item, index) => {
