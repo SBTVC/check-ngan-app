@@ -62,7 +62,10 @@ export function AppShell({ role, children }: { role: AppRole; children: ReactNod
         <div className="mt-auto border-t border-slate-100 p-4">
           <div className="mb-3 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white bg-orange-100">
-              {user?.imageUrl ? <Image src={user.imageUrl} alt={displayName} fill sizes="40px" className="object-cover" /> : <span className="flex h-full w-full items-center justify-center text-sm font-black text-orange-700">{displayName.slice(0, 1)}</span>}
+              {user?.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.imageUrl} alt={displayName} className="h-full w-full object-cover" />
+              ) : <span className="flex h-full w-full items-center justify-center text-sm font-black text-orange-700">{displayName.slice(0, 1)}</span>}
             </div>
             <div className="min-w-0 flex-1"><p className="truncate text-sm font-black text-slate-900">{displayName}</p><p className="truncate text-xs text-slate-500">{roleLabel}</p></div>
             <UserButton />
