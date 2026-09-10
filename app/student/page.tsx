@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { EmptyState, PageHeader, StatusBadge } from '@/components/ui'
+import { UserProfileSummary } from '@/components/user-profile-summary'
 import { formatDateTime, percent } from '@/lib/format'
 import { useSupabase } from '@/lib/supabase/useSupabase'
 
@@ -52,20 +53,16 @@ export default function StudentDashboardPage() {
   const averageScore = useMemo(() => { const values: number[] = []; assignments.forEach((a) => { const s = submissionMap.get(a.id); const g = s ? gradeMap.get(s.id) : undefined; if (g) values.push(percent(Number(g.score), Number(a.max_score))) }); return values.length ? Math.round(values.reduce((x, y) => x + y, 0) / values.length) : null }, [assignments, submissionMap, gradeMap])
   const nearestAssignment = useMemo(() => { if (now == null) return undefined; return assignments.filter((a) => !submissionMap.has(a.id) && a.due_date && new Date(a.due_date).getTime() >= now).sort((a, b) => new Date(a.due_date as string).getTime() - new Date(b.due_date as string).getTime())[0] }, [assignments, submissionMap, now])
   const filtered = useMemo(() => { const key = query.trim().toLowerCase(); return assignments.filter((a) => { const s = submissionMap.get(a.id); const g = s ? gradeMap.get(s.id) : undefined; const status: Filter = !s ? 'pending' : g ? 'graded' : 'submitted'; if (filter !== 'all' && status !== filter) return false; return !key || `${a.title} ${a.description ?? ''}`.toLowerCase().includes(key) }) }, [assignments, submissionMap, gradeMap, filter, query])
-  const studentName = user?.fullName || user?.firstName || 'นักเรียน'
-  const initials = studentName.slice(0, 1)
+  const studentName = user?.fullName || user?.firstName || 'นักเรียน/นักศึกษา'
 
   return (
     <div className="space-y-7">
-      <PageHeader eyebrow="พื้นที่ของฉัน" title={`สวัสดี ${studentName}`} description="เริ่มจากงานที่ต้องทำต่อ แล้วค่อยติดตามงานที่ส่งและผลคะแนนล่าสุด" actions={<button onClick={() => void loadData()} disabled={loading} className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60">{loading ? 'กำลังโหลด...' : 'รีเฟรชข้อมูล'}</button>} />
+      <PageHeader eyebrow="แดชบอร์ดนักเรียน/นักศึกษา" title={`สวัสดี ${studentName}`} description="ติดตามงานที่ต้องทำ งานที่ส่งแล้ว และผลคะแนนล่าสุดจากอาจารย์" actions={<button onClick={() => void loadData()} disabled={loading} className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60">{loading ? 'กำลังโหลด...' : 'รีเฟรชข้อมูล'}</button>} />
 
       <section className="grid gap-5 xl:grid-cols-[1.15fr_.85fr]">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-orange-700">{initials}</div>
-            <div className="min-w-0"><p className="text-xs font-bold text-slate-400">ข้อมูลผู้ใช้งาน</p><h2 className="mt-1 truncate text-lg font-black text-slate-950">{studentName}</h2><p className="mt-0.5 text-sm text-slate-500">นักเรียน · Check Ngan</p></div>
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-5 sm:grid-cols-4">
+        <div>
+          <UserProfileSummary role="student" />
+          <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-4">
             <MiniMetric label="งานทั้งหมด" value={stats.all} />
             <MiniMetric label="ยังไม่ส่ง" value={stats.pending} emphasis />
             <MiniMetric label="ตรวจแล้ว" value={stats.graded} />
