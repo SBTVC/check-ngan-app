@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -50,37 +49,109 @@ export default function TeacherDashboardPage() {
   }, [isLoaded, userId, loadDashboard])
 
   const gradedIds = useMemo(() => new Set(grades.map((item) => item.submission_id)), [grades])
-  const waitingCount = submissions.filter((item) => !gradedIds.has(item.id)).length
+  const waiting = useMemo(() => submissions.filter((item) => !gradedIds.has(item.id)), [submissions, gradedIds])
+  const waitingCount = waiting.length
   const teacherName = user?.fullName || user?.firstName || 'คุณครู'
+  const initials = teacherName.slice(0, 1)
 
   return (
     <div className="space-y-7">
-      <section className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-slate-950 shadow-sm">
-        <Image src="/college-campus.svg" alt="วิทยาลัย" fill sizes="(max-width: 1280px) 100vw, 1200px" className="object-cover opacity-55" priority />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-orange-900/35" />
-        <div className="relative grid min-h-[330px] gap-8 p-6 sm:p-8 lg:grid-cols-[1.3fr_.7fr] lg:items-center lg:p-10">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-3"><div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-white/20 bg-white"><Image src="/check-ngan-logo.svg" alt="Check Ngan" fill sizes="56px" className="object-cover" /></div><div><p className="text-xs font-extrabold uppercase tracking-[0.22em] text-orange-300">Teacher workspace</p><p className="mt-1 text-sm font-bold text-white/80">Check Ngan • ระบบจัดการงานการเรียน</p></div></div>
-            <h1 className="mt-6 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">สวัสดี {teacherName}<span className="block text-orange-300">จัดการงานในชั้นเรียนได้จากจอเดียว</span></h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-200 sm:text-base">มอบหมายงาน ติดตามการส่ง ตรวจไฟล์ และให้คะแนนนักเรียน พร้อมสรุปสถานะล่าสุดแบบเป็นระบบ</p>
-            <div className="mt-6 flex flex-wrap gap-3"><Link href="/teacher/assignments/new" className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-extrabold text-white hover:bg-orange-400">+ มอบหมายงานใหม่</Link><Link href="/teacher/submissions" className="rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-extrabold text-white backdrop-blur hover:bg-white/20">ตรวจงานนักเรียน</Link></div>
+      <PageHeader
+        eyebrow="ภาพรวมวันนี้"
+        title={`สวัสดี ${teacherName}`}
+        description="ดูงานที่ต้องจัดการ ติดตามการส่ง และเข้าถึงงานสำคัญของวันนี้ได้จากหน้านี้"
+        actions={
+          <>
+            <button type="button" onClick={() => void loadDashboard()} disabled={loading} className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60">
+              {loading ? 'กำลังอัปเดต...' : 'รีเฟรชข้อมูล'}
+            </button>
+            <PrimaryLink href="/teacher/assignments/new">+ มอบหมายงาน</PrimaryLink>
+          </>
+        }
+      />
+
+      <section className="grid gap-5 xl:grid-cols-[1.55fr_.45fr]">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-orange-100 text-lg font-black text-orange-700">{initials}</div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-slate-400">บัญชีผู้ใช้งาน</p>
+                <h2 className="mt-1 truncate text-lg font-black text-slate-950">{teacherName}</h2>
+                <p className="mt-0.5 text-sm text-slate-500">อาจารย์ผู้สอน · Check Ngan</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/teacher/assignments" className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50">ดูงานทั้งหมด</Link>
+              <Link href="/teacher/submissions" className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800">ไปหน้าตรวจงาน</Link>
+            </div>
           </div>
-          <div className="rounded-3xl border border-white/15 bg-white/10 p-5 text-white backdrop-blur-md"><p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-200">สรุปวันนี้</p><div className="mt-4 grid grid-cols-2 gap-3"><HeroMetric label="งานทั้งหมด" value={assignments.length} /><HeroMetric label="งานที่ส่ง" value={submissions.length} /><HeroMetric label="รอตรวจ" value={waitingCount} /><HeroMetric label="ตรวจแล้ว" value={grades.length} /></div><button type="button" onClick={() => void loadDashboard()} disabled={loading} className="mt-4 w-full rounded-xl bg-white px-4 py-2.5 text-sm font-extrabold text-slate-900 hover:bg-orange-50 disabled:opacity-60">{loading ? 'กำลังอัปเดต...' : 'อัปเดตข้อมูลล่าสุด'}</button></div>
+        </div>
+
+        <div className={`rounded-2xl border p-5 shadow-sm ${waitingCount > 0 ? 'border-orange-200 bg-orange-50' : 'border-emerald-200 bg-emerald-50'}`}>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold text-slate-500">งานที่ต้องจัดการ</p>
+              <p className="mt-2 text-3xl font-black text-slate-950">{waitingCount}</p>
+              <p className="mt-1 text-sm font-bold text-slate-800">{waitingCount > 0 ? 'งานกำลังรอตรวจ' : 'ไม่มีงานค้างตรวจ'}</p>
+            </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-current/10 bg-white/70 text-lg">{waitingCount > 0 ? '!' : '✓'}</span>
+          </div>
+          <Link href="/teacher/submissions" className="mt-4 inline-flex text-sm font-black text-orange-700 hover:underline">เปิดรายการตรวจงาน →</Link>
         </div>
       </section>
 
-      <PageHeader eyebrow="Workspace overview" title="ภาพรวมการเรียนการสอน" description="ข้อมูลสำคัญที่ช่วยให้คุณครูเห็นว่างานไหนถูกสร้างแล้ว งานไหนถูกส่ง และงานใดกำลังรอตรวจ" />
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label="งานที่มอบหมาย" value={assignments.length} note="งานทั้งหมดของบัญชีคุณครู" /><StatCard label="นักเรียนส่งงาน" value={submissions.length} note="Submission ที่ได้รับทั้งหมด" tone="blue" /><StatCard label="รอตรวจ" value={waitingCount} note="ควรตรวจและให้คะแนน" tone="orange" /><StatCard label="ตรวจเสร็จแล้ว" value={grades.length} note="มีผลคะแนนในระบบ" tone="green" /></section>
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="งานที่มอบหมาย" value={assignments.length} note="งานทั้งหมดที่สร้างไว้" />
+        <StatCard label="งานที่ส่งเข้ามา" value={submissions.length} note="Submission ที่ได้รับทั้งหมด" tone="blue" />
+        <StatCard label="รอตรวจ" value={waitingCount} note="ยังไม่มีผลคะแนน" tone="orange" />
+        <StatCard label="ตรวจแล้ว" value={grades.length} note="มีผลคะแนนในระบบ" tone="green" />
+      </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
-        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <div className="flex items-center justify-between gap-4"><div><h2 className="text-xl font-extrabold">งานล่าสุด</h2><p className="mt-1 text-sm text-slate-500">รายการงานที่คุณครูสร้างล่าสุด</p></div><Link href="/teacher/assignments" className="text-sm font-extrabold text-orange-600 hover:underline">ดูทั้งหมด →</Link></div>
-          <div className="mt-5">{assignments.length === 0 ? <EmptyState title="ยังไม่มีงานที่มอบหมาย" description="สร้างงานแรกเพื่อเริ่มใช้งานระบบ" action={<PrimaryLink href="/teacher/assignments/new">+ สร้างงานใหม่</PrimaryLink>} /> : <div className="divide-y divide-slate-100">{assignments.slice(0, 5).map((assignment) => <Link key={assignment.id} href={`/teacher/assignments/${assignment.id}`} className="group flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"><div className="min-w-0"><div className="flex items-center gap-2"><StatusBadge tone="orange">งานที่มอบหมาย</StatusBadge><span className="text-xs text-slate-400">#{assignment.id}</span></div><h3 className="mt-2 truncate font-extrabold group-hover:text-orange-600">{assignment.title}</h3><p className="mt-1 truncate text-sm text-slate-500">{assignment.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p></div><div className="shrink-0 sm:text-right"><p className="text-xs font-bold text-slate-400">กำหนดส่ง</p><p className="mt-1 text-sm font-bold text-slate-700">{formatDateTime(assignment.due_date)}</p></div></Link>)}</div>}</div>
+      <section className="grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 sm:px-6">
+            <div><h2 className="text-lg font-black text-slate-950">งานล่าสุด</h2><p className="mt-1 text-sm text-slate-500">งานที่คุณสร้างล่าสุด เรียงตามวันที่สร้าง</p></div>
+            <Link href="/teacher/assignments" className="text-sm font-black text-orange-700 hover:underline">ดูทั้งหมด</Link>
+          </div>
+          <div className="p-5 sm:p-6">
+            {assignments.length === 0 ? (
+              <EmptyState title="ยังไม่มีงานที่มอบหมาย" description="สร้างงานแรกเพื่อเริ่มใช้งานระบบ" action={<PrimaryLink href="/teacher/assignments/new">+ สร้างงานใหม่</PrimaryLink>} />
+            ) : (
+              <div className="divide-y divide-slate-100">
+                {assignments.slice(0, 5).map((assignment) => (
+                  <Link key={assignment.id} href={`/teacher/assignments/${assignment.id}`} className="group grid gap-3 py-4 first:pt-0 last:pb-0 sm:grid-cols-[1fr_auto] sm:items-center">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2"><StatusBadge tone="orange">มอบหมายแล้ว</StatusBadge><span className="text-xs text-slate-400">งาน #{assignment.id}</span></div>
+                      <h3 className="mt-2 truncate font-black text-slate-900 group-hover:text-orange-700">{assignment.title}</h3>
+                      <p className="mt-1 truncate text-sm text-slate-500">{assignment.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
+                    </div>
+                    <div className="shrink-0 sm:text-right"><p className="text-xs font-bold text-slate-400">กำหนดส่ง</p><p className="mt-1 text-sm font-bold text-slate-700">{formatDateTime(assignment.due_date)}</p><p className="mt-1 text-xs text-slate-400">เต็ม {assignment.max_score} คะแนน</p></div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="space-y-4"><div className="rounded-3xl border border-orange-200 bg-orange-50 p-6 shadow-sm"><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-orange-600">Priority</p><p className="mt-3 text-4xl font-extrabold">{waitingCount}</p><h2 className="mt-1 text-lg font-extrabold">งานกำลังรอการตรวจ</h2><p className="mt-2 text-sm leading-6 text-slate-600">ตรวจไฟล์ ให้คะแนน และส่งความคิดเห็นกลับให้นักเรียน</p><Link href="/teacher/submissions" className="mt-5 inline-flex rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-orange-600">ไปหน้าตรวจงาน →</Link></div><div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-slate-400">Quick action</p><h2 className="mt-3 text-xl font-extrabold">พร้อมสร้างงานใหม่?</h2><p className="mt-2 text-sm leading-6 text-slate-500">กำหนดหัวข้อ รายละเอียด ห้องเรียน วันส่ง และคะแนนเต็มได้ในแบบฟอร์มเดียว</p><div className="mt-5"><PrimaryLink href="/teacher/assignments/new">+ มอบหมายงาน</PrimaryLink></div></div></div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 sm:px-6"><div><h2 className="text-lg font-black text-slate-950">งานที่รอตรวจ</h2><p className="mt-1 text-sm text-slate-500">รายการล่าสุดที่ควรจัดการต่อ</p></div><span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-black text-orange-700">{waitingCount}</span></div>
+          <div className="p-5 sm:p-6">
+            {waiting.length === 0 ? (
+              <div className="py-6 text-center"><div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-lg font-black text-emerald-700">✓</div><h3 className="mt-3 font-black text-slate-900">ตรวจงานครบแล้ว</h3><p className="mt-1 text-sm text-slate-500">ตอนนี้ไม่มี Submission ที่รอการตรวจ</p></div>
+            ) : (
+              <div className="space-y-2">
+                {waiting.slice(0, 5).map((submission) => (
+                  <Link key={submission.id} href={`/teacher/submissions/${submission.id}`} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3 transition hover:border-orange-200 hover:bg-orange-50/50">
+                    <div className="min-w-0"><p className="truncate text-sm font-black text-slate-900">{submission.title || `Submission #${submission.id}`}</p><p className="mt-1 text-xs text-slate-500">ส่งเมื่อ {formatDateTime(submission.submitted_at)}</p></div>
+                    <span className="shrink-0 text-sm font-black text-orange-700">ตรวจ →</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </section>
     </div>
   )
 }
-
-function HeroMetric({ label, value }: { label: string; value: number }) { return <div className="rounded-2xl border border-white/10 bg-black/10 px-4 py-3"><p className="text-xs font-semibold text-white/65">{label}</p><p className="mt-1 text-2xl font-extrabold">{value}</p></div> }
