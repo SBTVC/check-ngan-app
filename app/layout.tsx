@@ -4,10 +4,10 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Check Ngan | ระบบจัดการงานการเรียน',
-    template: '%s | Check Ngan',
+    default: 'check-ngan System | ระบบติดตามงานของนักเรียนและนักศึกษา',
+    template: '%s | check-ngan System',
   },
-  description: 'ระบบมอบหมายงาน ส่งงาน ตรวจงาน และให้คะแนนสำหรับคุณครูและนักเรียน',
+  description: 'ระบบติดตามงานของนักเรียนและนักศึกษา สำหรับมอบหมายงาน ส่งงาน ตรวจงาน และติดตามผลคะแนน',
 }
 
 const themeScript = `
